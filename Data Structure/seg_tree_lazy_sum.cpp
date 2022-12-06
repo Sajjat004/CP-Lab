@@ -26,7 +26,7 @@ private:
   }
 
   void propagate(int at, int b, int e) {
-    tree[at].sum = tree[at].lazy * (e - b + 1);
+    tree[at].sum += tree[at].lazy * (e - b + 1);
     if (b != e) {
       tree[2 * at].lazy += tree[at].lazy;
       tree[2 * at + 1].lazy += tree[at].lazy;
