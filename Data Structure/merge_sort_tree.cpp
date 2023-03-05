@@ -2,39 +2,38 @@
 using namespace std;
 
 const int N = (int) 2e5 + 5;
-
-int ar[N];
+int nums[N];
 
 class MergeSortTree {
-private:
+ private:
   vector<vector<int>> tree;
   int n;
 
-  void merge(vector<int>& a, vector<int>& b, vector<int>& c) {
-    int l = (int) b.size(), r = (int) c.size();
-    int i = 0, j = 0;
-    while (i < l or j < r) {
-      if (i < l and j < r) {
-        if (b[i] <= c[j]) {
-          a.push_back(b[i]);
-          i++;
-        } else {
-          a.push_back(c[j]);
-          j++;
-        }
-      } else if (i < l) {
-        a.push_back(b[i]);
-        i++;
+  void merge(vector<int>& root, vector<int>& left, vector<int>& right) {
+    int leftsz = (int) left.size(), rightsz = (int) right.size();
+    int idxl = 0, idxr = 0;
+    while (idxl < leftsz and idxr < rightsz) {
+      if (left[idxl] <= right[idxr]) { 
+        root.push_back(left[idxl]);
+        idxl++;
       } else {
-        a.push_back(c[j]);
-        j++;
+        root.push_back(right[idxr]);
+        idxr++;
       }
+    }
+    while (idxl < leftsz) {
+      root.push_back(left[idxl]);
+      idxl++;
+    }
+    while (idxr < rightsz) {
+      root.push_back(right[idxr]);
+      idxr++;
     }
   }
 
   void build(int at, int b, int e) {
     if (b == e) {
-      tree[at].push_back(ar[b]);
+      tree[at].push_back(nums[b]);
       return;
     }
     int mid = (b + e) >> 1;
@@ -44,7 +43,7 @@ private:
   }
 
   int query(int at, int b, int e, int l, int r, int k) {
-    if (r <= b or e <= l) return 0;
+    if (r < b or e < l) return 0;
     if (l <= b and e <= r) {
       int cnt = lower_bound(tree[at].begin(), tree[at].end(), k) - tree[at].begin();
       return cnt;
@@ -55,7 +54,7 @@ private:
     return x + y;
   }
 
-public:
+ public:
   MergeSortTree(int n) {
     this->n = n;
     tree.resize(4 * n, vector<int>());
@@ -68,18 +67,20 @@ public:
 };
 
 int main() {
+  // freopen("input.txt", "r", stdin);
   ios_base::sync_with_stdio(false); cin.tie(0);
   int test = 1, tc = 0;
   while (test--) {
     int n; cin >> n;
-    for (int i = 1; i <= n; ++i) cin >> ar[i];
-    MergeSortTree ds(n);
-    int m; cin >> m;
-    while (m--) {
-      int l, r, k;
-      cin >> l >> r >> k;
-      cout << ds.query(l, r, k) << '\n';
+    for (int i = 1; i <= n; ++i) cin >> nums[i];
+    MergeSortTree mst(n);
+    int q; cin >> q;
+    while (q--) {
+      int l, r, k; cin >> l >> r >> k;
+      cout << mst.query(l, r, k) << '\n';
     }
   }
   return 0;
 }
+
+// find number of element less then k in a given range l to r.
