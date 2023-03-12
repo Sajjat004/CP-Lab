@@ -20,7 +20,7 @@ const int INF = (int) 1e9 + 9;
 
 int main() {
   freopen("input.txt", "r", stdin);
-  ios_base::sync_with_stdio(false); cin.tie(0);
+  ios_base::sync_with_stdio(false); cin.tie(nullptr);
   int test = 1, tc = 0;
   while (test--) {
     
