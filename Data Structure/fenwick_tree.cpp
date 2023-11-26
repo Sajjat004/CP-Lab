@@ -11,18 +11,16 @@ public:
     tree.assign(n + 2, 0);
   }
   void update(int idx, type val) {
-    while (idx <= n) {
-      tree[idx] += val;
-      idx += (idx & -idx);
-    }
+    for ( ; idx <= n; idx += (idx & -idx)) tree[idx] += val;
   }
   type query(int idx) {
     type sum = 0;
-    while (idx > 0) {
-      sum += tree[idx];
-      idx -= (idx & -idx);
-    }
+    for ( ; idx > 0; idx -= (idx & -idx)) sum += tree[idx];
     return sum;
+  }
+  void update(int l, int r, int val) {
+    update(l, val);
+    update(r + 1, -val);
   }
   type query(int l, int r) {
     return query(r) - query(l - 1);
