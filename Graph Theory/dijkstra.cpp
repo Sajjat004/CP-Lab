@@ -58,4 +58,10 @@ int main() {
   return 0;
 }
 
+/*
+Time complexity: O(VlogV + E)
+E = number of edge
+V = number of vertex
+*/
+
 // problem link: https://codeforces.com/contest/20/problem/C
