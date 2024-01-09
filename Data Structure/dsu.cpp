@@ -2,50 +2,56 @@
 using namespace std;
 
 class Dsu {
-  struct type {
+  struct Data {
     int par, rank, setSize;
-    type() : par(0), rank(0), setSize(0) {}
+    Data() {
+      par = rank = setSize = 0;
+    }
   };
-  vector<type> tree;
-  int n;
+  vector<Data> graph;
 
   int root(int x) {
-    return tree[x].par = tree[x].par == x ? x : root(tree[x].par);
+    return graph[x].par = graph[x].par == x ? x : root(graph[x].par);
   }
-
 public:
   Dsu(int n) {
-    this->n = n;
-    tree.resize(n + 2);
+    graph.resize(n + 5);
     for (int i = 0; i <= n; ++i) {
-      tree[i].par = i;
-      tree[i].rank = 0;
-      tree[i].setSize = 1;
+      graph[i].par = i;
+      graph[i].rank = 0;
+      graph[i].setSize = 1;
     }
   }
-
   void merge(int a, int b) {
-    int x = root(a), y = root(b);
+    int x = root(a);
+    int y = root(b);
     if (x == y) return;
-    if (tree[x].rank <= tree[y].rank) swap(x, y);
-    tree[y].par = x;
-    tree[x].setSize += tree[y].setSize;
-    if (tree[x].rank == tree[y].rank) tree[x].rank++;
+    if (graph[x].rank <= graph[y].rank) swap(x, y);
+    graph[y].par = x;
+    graph[x].setSize += graph[y].setSize;
+    if (graph[x].rank == graph[y].rank) graph[x].rank++;
+  }
+
+  int getSetSize(int x) {
+    return graph[root(x)].setSize;
   }
 };
 
 int main() {
+  // freopen("input.txt", "r", stdin);
   ios_base::sync_with_stdio(false); cin.tie(0);
-  int test = 1, tc = 0;
-  while (test--) {
-    int n; cin >> n;
-    Dsu ds(n);
-    int m; cin >> m;
-    while (m--) {
-      int u, v;
-      cin >> u >> v;
-      ds.merge(u, v);
-    }
+  int n, m; cin >> n >> m;
+  Dsu dsu(n);
+  for (int i = 0; i < m; ++i) {
+    int u, v; cin >> u >> v;
+    dsu.merge(u, v);
   }
+  int x; cin >> x;
+  cout << dsu.getSetSize(x) << '\n';
   return 0;
 }
+
+/*
+Time complexity: O(m alpha(n)) where alpha(n) <= 4.
+              => O(m)
+*/
