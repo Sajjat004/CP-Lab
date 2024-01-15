@@ -10,9 +10,11 @@ public:
     this->n = n;
     tree.assign(n + 2, 0);
   }
+  // Time Complexity: O(logN)
   void update(int idx, type val) {
     for ( ; idx <= n; idx += (idx & -idx)) tree[idx] += val;
   }
+  // Time Complexity: O(logN)
   type query(int idx) {
     type sum = 0;
     for ( ; idx > 0; idx -= (idx & -idx)) sum += tree[idx];

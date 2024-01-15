@@ -3,8 +3,6 @@ using namespace std;
 
 const int N = (int) 2e5 + 5;
 
-// problem link: https://toph.co/p/just-another-range-query
-
 long long sum[35 * N], lazy[35 * N];
 int L[35 * N], R[35 * N];
 
@@ -76,3 +74,5 @@ int main() {
   }
   return 0;
 }
+
+// problem link: https://toph.co/p/just-another-range-query

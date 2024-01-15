@@ -1,8 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// problem link: https://toph.co/p/just-another-range-query
-
 struct node {
   long long sum, lazy;
   node* left;
@@ -78,3 +76,5 @@ int main() {
   }
   return 0;
 }
+
+// problem link: https://toph.co/p/just-another-range-query

@@ -1,26 +1,22 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// problem link: https://vjudge.net/contest/491215#problem/E
-// 2D bit + dp
-
 class FenwickTree {
   vector<vector<long long>> tree;
   int n;
-
 public:
   FenwickTree(int n) {
     this->n = n;
     tree.resize(12, vector<long long>(n + 2, 0));
   }
-
+  // Time Complexity: O(logN)
   void update(int len, int idx, long long val) {
     while (idx <= n) {
       tree[len][idx] += val;
       idx += (idx & -idx);
     }
   }
-
+  // Time Complexity: O(logN)
   long long query(int len, int idx) {
     long long sum = 0;
     while (idx > 0) {
@@ -30,7 +26,6 @@ public:
     return sum;
   }
 };
-
 
 int main() {
   ios_base::sync_with_stdio(false); cin.tie(0);
@@ -52,3 +47,7 @@ int main() {
   }
   return 0;
 }
+/*
+problem link: https://vjudge.net/contest/491215#problem/E
+Solution Tag: 2D bit + dp
+*/

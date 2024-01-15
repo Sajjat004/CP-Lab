@@ -37,3 +37,9 @@ int main() {
   }
   return 0;
 }
+
+/*
+Time Complexity: O(E + V)
+E = number of edge
+V = number of vertex
+*/
