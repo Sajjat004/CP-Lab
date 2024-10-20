@@ -1,18 +1,12 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-using ll  = long long;
-using pii = pair<int, int>;
-
-#define nl      '\n'
-#define ff      first
-#define ss      second
-#define szof(x) (int) x.size()
-
 class Hashing {
-  int add(int a, int b, int mod) { a += b; return a >= mod ? a - mod : a < 0 ? a + mod : a; }
-  int mult(int a, int b, int mod) { return (ll) a * b % mod; }
-  int power(ll base, ll exp, const int mod) {
+  static const int MOD = (int) 1e9 + 7;
+  static const int N = (int) 1e6;
+  static int add(int a, int b, int mod) { a += b; return a >= mod ? a - mod : a < 0 ? a + mod : a; }
+  static int mult(int a, int b, int mod) { return 1LL * a * b % mod; }
+  static int power(int base, int exp, const int mod) {
     int res = 1;
     base %= mod;
     if (base < 0) base += mod;
@@ -23,63 +17,77 @@ class Hashing {
     }
     return res;
   }
-  int get(char ch) { return ch - 'a' + 1; }
+  static int get(char ch) { return ch - 'a' + 1; }
+  static const int MOD1 = 127657753, MOD2 = 987654319;
+  static const int BASE1 = 137, BASE2 = 277;
 
-  const int MOD1 = 127657753, MOD2 = 987654319;
-  const int BASE1 = 137, BASE2 = 277;
-  const int inveMod1 = power(BASE1, MOD1 - 2, MOD1);
-  const int inveMod2 = power(BASE2, MOD2 - 2, MOD2);
-  vector<pii> pw, invPw;
-  vector<pii> hash;
+  static vector<pair<int, int>> pw, invPw;
+  vector<pair<int, int>> hash;
+
   int n;
   string s;
 
   void build() {
     hash.push_back({0, 0});
     for (int i = 0; i < n; ++i) {
-      pii p;
-      p.ff = add(hash[i].ff, mult(get(s[i]), pw[i].ff, MOD1), MOD1);
-      p.ss = add(hash[i].ss, mult(get(s[i]), pw[i].ss, MOD2), MOD2);
+      pair<int, int> p;
+      p.first = add(hash[i].first, mult(get(s[i]), pw[i].first, MOD1), MOD1);
+      p.second = add(hash[i].second, mult(get(s[i]), pw[i].second, MOD2), MOD2);
       hash.push_back(p);
+    }
+  }
+
+  void preCalculate() {
+    static bool calculated = false;
+    if (calculated) return;
+
+    static const int inveMod1 = power(BASE1, MOD1 - 2, MOD1);
+    static const int inveMod2 = power(BASE2, MOD2 - 2, MOD2);
+
+    pw.assign(N + 2, {1, 1});
+    invPw.assign(N + 2, {1, 1});
+    for (int i = 1; i <= N; ++i) {
+      pw[i].first = mult(pw[i - 1].first, BASE1, MOD1);
+      pw[i].second = mult(pw[i - 1].second, BASE2, MOD2);
+      invPw[i].first = mult(invPw[i - 1].first, inveMod1, MOD1);
+      invPw[i].second = mult(invPw[i - 1].second, inveMod2, MOD2);
     }
   }
 
 public:
   Hashing(string _s) {
     s = _s;
-    n = szof(s);
-    pw.assign(n + 2, {1, 1});
-    invPw.assign(n + 2, {1, 1});
-    for (int i = 1; i <= n; ++i) {
-      pw[i].ff = mult(pw[i - 1].ff, BASE1, MOD1);
-      pw[i].ss = mult(pw[i - 1].ss, BASE2, MOD2);
-      invPw[i].ff = mult(invPw[i - 1].ff, inveMod1, MOD1);
-      invPw[i].ss = mult(invPw[i - 1].ss, inveMod2, MOD2);
-    }
+    n = s.size();
+    preCalculate();
     build();
   }
 
-  pii getHash(int l, int r) {
-    pii p;
-    p.ff = mult(add(hash[r].ff, -hash[l - 1].ff, MOD1), invPw[l - 1].ff, MOD1);
-    p.ss = mult(add(hash[r].ss, -hash[l - 1].ss, MOD2), invPw[l - 1].ss, MOD2);
+  pair<int, int> getHash(int l, int r) {
+    pair<int, int> p;
+    p.first = mult(add(hash[r].first, -hash[l - 1].first, MOD1), invPw[l - 1].first, MOD1);
+    p.second = mult(add(hash[r].second, -hash[l - 1].second, MOD2), invPw[l - 1].second, MOD2);
     return p;
   }
 };
 
+vector<pair<int, int>> Hashing::pw;
+vector<pair<int, int>> Hashing::invPw;
+
 int main() {
   // freopen("input.txt", "r", stdin);
   ios_base::sync_with_stdio(false); cin.tie(0);
-  int n;
-  while (cin >> n) {
-    string s, t; cin >> t >> s;
-    Hashing hash(s);
-    auto hs = Hashing(t).getHash(1, n);
-    for (int i = 1; i + n - 1 <= szof(s); ++i) {
-      if (hash.getHash(i, i + n - 1) == hs) cout << i - 1 << nl;
-    }
-    cout << nl;
+
+  string s, t; cin >> s >> t;
+  int n = s.size(), m = t.size();
+  Hashing hash(s);
+  auto hs = Hashing(t).getHash(1, m);
+  int ans = 0;
+  for (int i = 1; i + m - 1 <= n; ++i) {
+    if (hash.getHash(i, i + m - 1) == hs) ans++;
   }
+  cout << ans << '\n';
+
   return 0;
 }
-// https://cses.fi/problemset/task/1753
+
+// problem link: https://cses.fi/problemset/task/1753/
