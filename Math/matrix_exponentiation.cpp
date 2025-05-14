@@ -5,49 +5,49 @@ using ll = long long;
 
 const int MOD = 998244353;
 
-class Matrix {
+class MatrixExpo {
 public:
-  vector<vector<int>> _matrix;
-  int _rows, _cols;
+  vector<vector<int>> matrix;
+  int rows, cols;
 
-  Matrix(int rows, int cols) : _rows(rows), _cols(cols) { _matrix.resize(rows, vector<int>(cols)); }
-  Matrix(const vector<vector<int>>& mat) : _cols(mat[0].size()), _rows(mat.size()), _matrix(mat) {}
-  Matrix(const Matrix& matrix) : _cols(matrix._cols), _rows(matrix._rows), _matrix(matrix._matrix) {}
+  MatrixExpo(int rows, int cols) : rows(rows), cols(cols) { matrix.resize(rows, vector<int>(cols)); }
+  MatrixExpo(const vector<vector<int>>& mat) : rows(mat.size()), cols(mat[0].size()), matrix(mat) {}
+  MatrixExpo(const MatrixExpo& other) : rows(other.rows), cols(other.cols), matrix(other.matrix) {}
 
-  Matrix operator+(const Matrix& matrix) const {
-    assert(_rows == matrix._rows && _cols == matrix._cols);
+  MatrixExpo operator+(const MatrixExpo& other) const {
+    assert(rows == other.rows && cols == other.cols);
 
-    Matrix result(_rows, _cols);
-    for (int i = 0; i < _rows; ++i) {
-      for (int j = 0; j < _cols; ++j) {
-        result._matrix[i][j] = (_matrix[i][j] + matrix._matrix[i][j]) % MOD;
+    MatrixExpo result(rows, cols);
+    for (int i = 0; i < rows; ++i) {
+      for (int j = 0; j < cols; ++j) {
+        result.matrix[i][j] = (matrix[i][j] + other.matrix[i][j]) % MOD;
       }
     }
 
     return result;
   }
 
-  Matrix operator-(const Matrix& matrix) const {
-    assert(_rows == matrix._rows && _cols == matrix._cols);
+  MatrixExpo operator-(const MatrixExpo& other) const {
+    assert(rows == other.rows && cols == other.cols);
 
-    Matrix result(_rows, _cols);
-    for (int i = 0; i < _rows; ++i) {
-      for (int j = 0; j < _cols; ++j) {
-        result._matrix[i][j] = (_matrix[i][j] - matrix._matrix[i][j] + MOD) % MOD;
+    MatrixExpo result(rows, cols);
+    for (int i = 0; i < rows; ++i) {
+      for (int j = 0; j < cols; ++j) {
+        result.matrix[i][j] = (matrix[i][j] - other.matrix[i][j] + MOD) % MOD;
       }
     }
 
     return result;
   }
 
-  Matrix operator*(const Matrix& matrix) const {
-    assert(_cols == matrix._rows);
+  MatrixExpo operator*(const MatrixExpo& other) const {
+    assert(cols == other.rows);
 
-    Matrix result(_rows, matrix._cols);
-    for (int i = 0; i < _rows; ++i) {
-      for (int j = 0; j < matrix._cols; ++j) {
-        for (int k = 0; k < _cols; ++k) {
-          result._matrix[i][j] = (result._matrix[i][j] + (1LL * _matrix[i][k] * matrix._matrix[k][j]) % MOD) % MOD;
+    MatrixExpo result(rows, other.cols);
+    for (int i = 0; i < rows; ++i) {
+      for (int j = 0; j < other.cols; ++j) {
+        for (int k = 0; k < cols; ++k) {
+          result.matrix[i][j] = (result.matrix[i][j] + (1LL * matrix[i][k] * other.matrix[k][j]) % MOD) % MOD;
         }
       }
     }
@@ -55,26 +55,26 @@ public:
     return result;
   }
 
-  Matrix& operator+=(const Matrix& matrix) { return *this = *this + matrix; }
-  Matrix& operator-=(const Matrix& matrix) { return *this = *this - matrix; }
-  Matrix& operator*=(const Matrix& matrix) { return *this = *this * matrix; }
-  bool operator==(const Matrix& matrix) const { return _matrix == matrix._matrix; }
-  bool operator!=(const Matrix& matrix) const { return _matrix != matrix._matrix; }
+  MatrixExpo& operator+=(const MatrixExpo& other) { return *this = *this + other; }
+  MatrixExpo& operator-=(const MatrixExpo& other) { return *this = *this - other; }
+  MatrixExpo& operator*=(const MatrixExpo& other) { return *this = *this * other; }
+  bool operator==(const MatrixExpo& other) const { return matrix == other.matrix; }
+  bool operator!=(const MatrixExpo& other) const { return matrix != other.matrix; }
 
-  static Matrix identity(int size) {
-    Matrix result(size, size);
+  static MatrixExpo identity(int size) {
+    MatrixExpo result(size, size);
     for (int i = 0; i < size; ++i) {
-      result._matrix[i][i] = 1;
+      result.matrix[i][i] = 1;
     }
 
     return result;
   }
 
-  Matrix power(long long exp) const {
-    assert(_rows == _cols);
+  MatrixExpo power(long long exp) const {
+    assert(rows == cols);
 
-    Matrix result = identity(_rows);
-    Matrix base = *this;
+    MatrixExpo result = identity(rows);
+    MatrixExpo base = *this;
 
     while (exp) {
       if (exp & 1) {
@@ -101,12 +101,12 @@ int32_t main() {
     }
   }
 
-  Matrix matrix(mat);
-  Matrix result = matrix.power(k);
+  MatrixExpo matrix(mat);
+  MatrixExpo result = matrix.power(k);
 
   for (int i = 0; i < n; ++i) {
     for (int j = 0; j < n; ++j) {
-      cout << result._matrix[i][j] << ' ';
+      cout << result.matrix[i][j] << ' ';
     }
     cout << '\n';
   }
