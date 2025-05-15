@@ -3,7 +3,7 @@ using namespace std;
 
 class NumberTheory {
   vector<int> factorial;
-  vector<int> inverseFactorial
+  vector<int> inverseFactorial;
 
 public:
   int add(int a, int b, const int mod) { return (a + b) % mod; }
@@ -33,7 +33,7 @@ public:
     inverseFactorial.resize(n + 1);
 
     factorial[0] = 1;
-    for (int i = 2; i <= n; ++i) {
+    for (int i = 1; i <= n; ++i) {
       factorial[i] = 1LL * factorial[i - 1] * i % mod;
     }
 
