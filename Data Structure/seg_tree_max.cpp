@@ -28,7 +28,7 @@ template<typename type> class SegTreeMax {
     }
     int mid = (b + e) >> 1;
     update(2 * at, b, mid, idx, val);
-    update(2 * at, mid + 1, e, idx, val);
+    update(2 * at + 1, mid + 1, e, idx, val);
     tree[at] = max(tree[2 * at], tree[2 * at + 1]);
   }
 
